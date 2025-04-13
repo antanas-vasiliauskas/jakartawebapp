@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>University Directory</title>
+</h:head>
+<h:body>
+    <h1>University Directory</h1>
+    
+    <!-- Form to add a new University -->
+    <h:form>
+        <h:panelGrid columns="2">
+            <h:outputLabel for="name" value="University Name:" />
+            <h:inputText id="name" value="#{universityBean.name}" required="true" />
+            
+            <h:outputText /> <!-- empty cell -->
+            <h:message for="name" style="color:red" />
+            
+            <h:outputText /> <!-- empty cell -->
+            <h:commandButton value="Add University" action="#{universityBean.addUniversity}" />
+        </h:panelGrid>
+    </h:form>
+    
+    <br/><br/>
+    
+    <!-- Table to display all universities -->
+    <h:dataTable value="#{universityBean.universities}" var="uni" border="1" cellpadding="5">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{uni.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Name</f:facet>
+            #{uni.name}
+        </h:column>
+    </h:dataTable>
+</h:body>
+</html>
