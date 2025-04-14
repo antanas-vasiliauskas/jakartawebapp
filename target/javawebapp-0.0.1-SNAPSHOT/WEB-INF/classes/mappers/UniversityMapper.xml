@@ -1,0 +1,37 @@
+<!-- UniversityMapper.xml -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.UniversityMapper">
+  <!-- Result mapping for University (if needed, e.g., mapping column aliases to properties) -->
+  <resultMap id="UniversityResultMap" type="com.example.University">
+    <!-- Assuming University has fields: id, name -->
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <!-- If University has a collection of students, we could map it via a collection (optional) -->
+    <!-- e.g., <collection property="students" ofType="com.example.model.Student" 
+               column="id" select="selectStudentsByUniversityId"/> -->
+  </resultMap>
+
+  <!-- Select queries -->
+  <select id="selectById" parameterType="int" resultMap="UniversityResultMap">
+    SELECT id, name 
+    FROM university 
+    WHERE id = #{id}
+  </select>
+  <select id="selectAll" resultMap="UniversityResultMap">
+    SELECT id, name 
+    FROM university
+  </select>
+
+  <!-- Insert, Update, Delete -->
+  <insert id="insert" parameterType="com.example.University">
+    INSERT INTO university(name) VALUES(#{name})
+    <!-- useGeneratedKeys could be used to get DB-generated ID, if needed -->
+  </insert>
+  <update id="update" parameterType="com.example.University">
+    UPDATE university SET name = #{name} WHERE id = #{id}
+  </update>
+  <delete id="deleteById" parameterType="int">
+    DELETE FROM university WHERE id = #{id}
+  </delete>
+</mapper>

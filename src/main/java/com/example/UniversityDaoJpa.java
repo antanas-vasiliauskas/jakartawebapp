@@ -1,10 +1,12 @@
 package com.example;
 
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Alternative;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
+@Alternative
 @Stateless
 public class UniversityDaoJpa implements UniversityDao {
     @PersistenceContext(unitName = "UniversityPU")

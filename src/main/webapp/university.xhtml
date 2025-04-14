@@ -28,6 +28,40 @@
             <h:commandButton value="Cancel" immediate="true"
                              action="universities?faces-redirect=true" />
         </h:form>
+
+        <!-- STUDENTS LIST -->
+        <h:panelGroup rendered="#{not empty universityBean.students}">
+            <h3>Students</h3>
+            <h:dataTable value="#{universityBean.students}" var="student" border="1">
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                    #{student.id}
+                </h:column>
+				<h:column>
+				    <f:facet name="header">First Name</f:facet>
+				    #{student.firstName}  <!-- ✅ Correct -->
+				</h:column>
+				<h:column>
+				    <f:facet name="header">Last Name</f:facet>
+				    #{student.lastName}  <!-- ✅ Correct -->
+				</h:column>
+            </h:dataTable>
+        </h:panelGroup>
+
+        <!-- COURSES LIST -->
+        <h:panelGroup rendered="#{not empty universityBean.courses}">
+            <h3>Courses</h3>
+            <h:dataTable value="#{universityBean.courses}" var="course" border="1">
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                    #{course.id}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Title</f:facet>
+                    #{course.title}
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
     </f:view>
 </h:body>
 </html>
