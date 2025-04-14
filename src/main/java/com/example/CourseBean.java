@@ -47,7 +47,6 @@ public class CourseBean implements Serializable {
     }
     
     public Integer getSelectedUniversityId() {
-        // Initialize selectedUniversityId if editing existing course
         if (selectedUniversityId == null && getCourse().getUniversity() != null) {
             selectedUniversityId = course.getUniversity().getId();
         }
@@ -62,7 +61,6 @@ public class CourseBean implements Serializable {
     }
     
     public List<Student> getAvailableStudents() {
-        // Load students for the currently selected university
         if (selectedUniversityId != null) {
             availableStudents = studentService.findByUniversityId(selectedUniversityId);
         } else {
@@ -72,7 +70,6 @@ public class CourseBean implements Serializable {
     }
     
     public List<Integer> getSelectedStudentIds() {
-        // Initialize selectedStudentIds if editing an existing course
         if (selectedStudentIds.isEmpty() && id != null && id != 0) {
             for (Student s : getCourse().getStudents()) {
                 selectedStudentIds.add(s.getId());
@@ -84,27 +81,21 @@ public class CourseBean implements Serializable {
         this.selectedStudentIds = selectedStudentIds;
     }
     
-    // Ajax listener to update available students list when university selection changes
     public void changeUniversity() {
         if (selectedUniversityId != null) {
-            // Reset selected students when changing university
             selectedStudentIds.clear();
             availableStudents = studentService.findByUniversityId(selectedUniversityId);
-            // Also ensure course's students list is cleared for the new university context
             getCourse().setStudents(new ArrayList<>());
         }
     }
     
     public String saveCourse() {
-        // Set the University for the course
         if (selectedUniversityId != null) {
             University uni = universityService.findById(selectedUniversityId);
             course.setUniversity(uni);
         }
-        // Build the list of Student entities from selected IDs
         List<Student> newStudents = new ArrayList<>();
         if (selectedStudentIds != null) {
-            // Use availableStudents list to map IDs to Student objects
             for (Student s : getAvailableStudents()) {
                 if (selectedStudentIds.contains(s.getId())) {
                     newStudents.add(s);

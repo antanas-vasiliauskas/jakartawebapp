@@ -26,13 +26,9 @@ public class MyBatisSessionFactoryProvider {
     @PostConstruct
     public void init() {
         try {
-            // Load MyBatis config
             InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
-
-            // Build factory using config
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-            // Optionally inject JNDI datasource (if not using XML datasource config)
+            // inject JNDI datasource
             try {
                 DataSource ds = (DataSource) new InitialContext().lookup("jdbc/UniversityDS");
                 sqlSessionFactory.getConfiguration().setEnvironment(

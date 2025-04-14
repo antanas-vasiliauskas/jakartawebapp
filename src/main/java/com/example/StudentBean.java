@@ -42,7 +42,6 @@ public class StudentBean implements Serializable  {
     }
     
     public Integer getSelectedUniversityId() {
-        // If editing, initialize selectedUniversityId with current value
         if (selectedUniversityId == null && getStudent().getUniversity() != null) {
             selectedUniversityId = student.getUniversity().getId();
         }
