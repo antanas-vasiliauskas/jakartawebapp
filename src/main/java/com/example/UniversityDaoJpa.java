@@ -7,19 +7,36 @@ import java.util.List;
 
 @Stateless
 public class UniversityDaoJpa implements UniversityDao {
-
     @PersistenceContext(unitName = "UniversityPU")
     private EntityManager em;
-
-    @Override
-    public void add(University university) {
-        em.persist(university);
-    }
-
+    
     @Override
     public List<University> findAll() {
-        // JPQL query to retrieve all University entities
+        // Retrieve all University entities
         return em.createQuery("SELECT u FROM University u", University.class)
                  .getResultList();
+    }
+    
+    @Override
+    public University find(int id) {
+        return em.find(University.class, id);
+    }
+    
+    @Override
+    public void create(University university) {
+        em.persist(university);
+    }
+    
+    @Override
+    public University update(University university) {
+        return em.merge(university);
+    }
+    
+    @Override
+    public void delete(int id) {
+        University u = em.find(University.class, id);
+        if (u != null) {
+            em.remove(u);  // Cascade will remove associated students and courses
+        }
     }
 }

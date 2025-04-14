@@ -1,44 +1,72 @@
 package com.example;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.faces.application.FacesMessage;
+
+import java.io.Serializable;
 import java.util.List;
 
-@Named("universityBean")
-@RequestScoped
-public class UniversityBean {
-
+@Named
+@ViewScoped
+public class UniversityBean implements Serializable {
     @Inject
     private UniversityService universityService;
     
-    private String name;  // bound to input for new University name
-
-    // Getter and setter for the name field (for form binding)
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Action method to add a new University.
-     */
-    public String addUniversity() {
-        if (name != null && !name.trim().isEmpty()) {
-            universityService.addUniversity(name.trim());
-            // Reset the name field after adding
-            name = null;
-        }
-        // Return null to stay on the same page and refresh list
-        return null;
-    }
-
-    /**
-     * Returns the list of all universities for display.
-     */
+    private List<University> universities;
+    private University university;
+    private Integer id;  // for JSF view param (university id)
+    
+    // Getter for list of universities (used in list page)
     public List<University> getUniversities() {
-        return universityService.getAllUniversities();
+        if (universities == null) {
+            universities = universityService.findAll();
+        }
+        return universities;
+    }
+    
+    // Getter/Setter for view param id
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    
+    // Getter for single University (used in detail page)
+    public University getUniversity() {
+        if (university == null) {
+            if (id != null && id != 0) {
+                // Editing existing University
+                university = universityService.findById(id);
+            } else {
+                // Creating new University
+                university = new University();
+            }
+        }
+        return university;
+    }
+    
+    // Action to save University (create or update)
+    public String saveUniversity() {
+        if (university.getId() == 0) {
+            universityService.create(university);
+        } else {
+            universityService.update(university);
+        }
+        return "universities?faces-redirect=true";
+    }
+    
+    // Action to delete the current University
+    public String deleteUniversity() {
+        if (university != null) {
+            try {
+                universityService.delete(university.getId());
+            } catch (Exception e) {
+                // Handle constraint issues (e.g., if not all cascade)
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("Could not delete University: " + e.getMessage()));
+                return null;
+            }
+        }
+        return "universities?faces-redirect=true";
     }
 }

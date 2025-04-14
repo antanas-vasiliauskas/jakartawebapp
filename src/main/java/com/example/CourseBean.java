@@ -1,0 +1,130 @@
+package com.example;
+
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+
+@Named
+@ViewScoped
+public class CourseBean implements Serializable {
+    @Inject
+    private CourseService courseService;
+    @Inject
+    private UniversityService universityService;
+    @Inject
+    private StudentService studentService;
+    
+    private List<Course> courses;
+    private Course course;
+    private Integer id;                     // course id for view param
+    private Integer selectedUniversityId;   // selected University id for dropdown
+    private List<Student> availableStudents = new ArrayList<>();
+    private List<Integer> selectedStudentIds = new ArrayList<>();
+    
+    public List<Course> getCourses() {
+        if (courses == null) {
+            courses = courseService.findAll();
+        }
+        return courses;
+    }
+    
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    
+    public Course getCourse() {
+        if (course == null) {
+            if (id != null && id != 0) {
+                course = courseService.findById(id);
+            } else {
+                course = new Course();
+            }
+        }
+        return course;
+    }
+    
+    public Integer getSelectedUniversityId() {
+        // Initialize selectedUniversityId if editing existing course
+        if (selectedUniversityId == null && getCourse().getUniversity() != null) {
+            selectedUniversityId = course.getUniversity().getId();
+        }
+        return selectedUniversityId;
+    }
+    public void setSelectedUniversityId(Integer selectedUniversityId) {
+        this.selectedUniversityId = selectedUniversityId;
+    }
+    
+    public List<University> getUniversities() {
+        return universityService.findAll();
+    }
+    
+    public List<Student> getAvailableStudents() {
+        // Load students for the currently selected university
+        if (selectedUniversityId != null) {
+            availableStudents = studentService.findByUniversityId(selectedUniversityId);
+        } else {
+            availableStudents = new ArrayList<>();
+        }
+        return availableStudents;
+    }
+    
+    public List<Integer> getSelectedStudentIds() {
+        // Initialize selectedStudentIds if editing an existing course
+        if (selectedStudentIds.isEmpty() && id != null && id != 0) {
+            for (Student s : getCourse().getStudents()) {
+                selectedStudentIds.add(s.getId());
+            }
+        }
+        return selectedStudentIds;
+    }
+    public void setSelectedStudentIds(List<Integer> selectedStudentIds) {
+        this.selectedStudentIds = selectedStudentIds;
+    }
+    
+    // Ajax listener to update available students list when university selection changes
+    public void changeUniversity() {
+        if (selectedUniversityId != null) {
+            // Reset selected students when changing university
+            selectedStudentIds.clear();
+            availableStudents = studentService.findByUniversityId(selectedUniversityId);
+            // Also ensure course's students list is cleared for the new university context
+            getCourse().setStudents(new ArrayList<>());
+        }
+    }
+    
+    public String saveCourse() {
+        // Set the University for the course
+        if (selectedUniversityId != null) {
+            University uni = universityService.findById(selectedUniversityId);
+            course.setUniversity(uni);
+        }
+        // Build the list of Student entities from selected IDs
+        List<Student> newStudents = new ArrayList<>();
+        if (selectedStudentIds != null) {
+            // Use availableStudents list to map IDs to Student objects
+            for (Student s : getAvailableStudents()) {
+                if (selectedStudentIds.contains(s.getId())) {
+                    newStudents.add(s);
+                }
+            }
+        }
+        course.setStudents(newStudents);
+        
+        if (course.getId() == 0) {
+            courseService.create(course);
+        } else {
+            courseService.update(course);
+        }
+        return "courses?faces-redirect=true";
+    }
+    
+    public String deleteCourse() {
+        if (course != null) {
+            courseService.delete(course.getId());
+        }
+        return "courses?faces-redirect=true";
+    }
+}
