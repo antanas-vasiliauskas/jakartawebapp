@@ -4,6 +4,8 @@ import jakarta.ejb.Stateless;
 import jakarta.enterprise.inject.Alternative;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 @Alternative
@@ -17,7 +19,7 @@ public class CourseDaoJpa implements CourseDao {
         return em.createQuery("SELECT c FROM Course c", Course.class)
                  .getResultList();
     }
-    
+
     @Override
     public Course find(int id) {
         return em.find(Course.class, id);
@@ -32,7 +34,8 @@ public class CourseDaoJpa implements CourseDao {
     public Course update(Course course) {
         return em.merge(course);
     }
-    
+
+
     @Override
     public void delete(int id) {
         Course c = em.find(Course.class, id);

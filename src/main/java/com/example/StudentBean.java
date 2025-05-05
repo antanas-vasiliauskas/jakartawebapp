@@ -3,6 +3,7 @@ package com.example;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
+import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,22 +41,29 @@ public class StudentBean implements Serializable  {
         }
         return student;
     }
-    
+
+
+    @Transactional
     public Integer getSelectedUniversityId() {
         if (selectedUniversityId == null && getStudent().getUniversity() != null) {
             selectedUniversityId = student.getUniversity().getId();
         }
         return selectedUniversityId;
     }
+
+    @Transactional
     public void setSelectedUniversityId(Integer selectedUniversityId) {
         this.selectedUniversityId = selectedUniversityId;
     }
-    
+
+
+    @Transactional
     public List<University> getUniversities() {
         // Provide list of all universities for the dropdown
         return universityService.findAll();
     }
-    
+
+    @Transactional
     public String saveStudent() {
         // Set the selected University object before saving
         if (selectedUniversityId != null) {
@@ -76,7 +84,8 @@ public class StudentBean implements Serializable  {
         }
         return "students?faces-redirect=true";
     }
-    
+
+    @Transactional
     public String reloadStudent() {
         if (id != null && id != 0) {
             student = studentService.findById(id); // re-fetch fresh copy

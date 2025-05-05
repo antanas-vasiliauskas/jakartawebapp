@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 @Named
 @ViewScoped
 public class CourseBean implements Serializable {

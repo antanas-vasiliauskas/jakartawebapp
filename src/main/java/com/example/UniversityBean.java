@@ -5,6 +5,7 @@ import jakarta.inject.Named;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +30,8 @@ public class UniversityBean implements Serializable {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
+
+    @Transactional
     public University getUniversity() {
         if (university == null) {
             if (id != null && id != 0) {
@@ -48,6 +51,7 @@ public class UniversityBean implements Serializable {
         return getUniversity().getCourses();
     }
 
+    @Transactional
     public String saveUniversity() {
         if (university.getId() == 0) {
             universityService.create(university);
@@ -57,6 +61,7 @@ public class UniversityBean implements Serializable {
         return "universities?faces-redirect=true";
     }
 
+    @Transactional
     public String deleteUniversity() {
         if (university != null) {
             try {
