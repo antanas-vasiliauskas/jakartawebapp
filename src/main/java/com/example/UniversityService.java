@@ -1,11 +1,11 @@
 package com.example;
 
-import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
 
-@Stateless
+@ApplicationScoped
 public class UniversityService {
     @Inject
     private UniversityDao universityDao;

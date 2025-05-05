@@ -5,14 +5,16 @@
                            https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd" 
        bean-discovery-mode="annotated" version="4.0">
   <alternatives>
+  
     <class>com.example.UniversityDaoJpa</class>
     <class>com.example.StudentDaoJpa</class>
     <class>com.example.CourseDaoJpa</class>
-     
-     <!--     
+      
+        <!--  
     <class>com.example.UniversityDaoMyBatis</class>
     <class>com.example.StudentDaoMyBatis</class>
     <class>com.example.CourseDaoMyBatis</class>
     -->
+   
   </alternatives>
 </beans>
