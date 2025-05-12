@@ -6,12 +6,17 @@
 </h:head>
 <h:body>
 	<ui:include src="_navbar.xhtml" />
+	
     <f:metadata>
         <f:viewParam name="id" value="#{courseBean.id}" />
-        <f:viewAction action="#{courseBean.getCourse}" /> <!-- Load course on initial view -->
+        <f:viewAction action="#{courseBean.getCourse}" />
     </f:metadata>
+    
+    
     <h2>#{courseBean.course.id == 0 ? 'New Course' : 'Edit Course'}</h2>
+    
     <h:form id="courseForm">
+    
         <h:panelGrid columns="2">
             <h:outputLabel for="title" value="Title:" />
             <h:inputText id="title" value="#{courseBean.course.title}" required="true" />
@@ -23,17 +28,22 @@
                 <f:ajax listener="#{courseBean.changeUniversity}" render="studentsList"/>
             </h:selectOneMenu>
         </h:panelGrid>
+        
         <br/>
+        
         <h:outputLabel value="Enrolled Students:" style="font-weight:bold;"/>
+        
         <br/>
-        <!-- Multi-select list of students for the selected university -->
+        
+        
         <h:selectManyListbox id="studentsList" value="#{courseBean.selectedStudentIds}" 
                               size="5" style="min-width:200px;">
             <f:selectItems value="#{courseBean.availableStudents}" var="stu" 
                            itemValue="#{stu.id}" itemLabel="#{stu.firstName} #{stu.lastName}" />
         </h:selectManyListbox>
-        <p><i>(Use Ctrl+Click or Cmd+Click to select multiple students)</i></p>
+        
         <br/>
+        
         <h:commandButton value="Save" action="#{courseBean.saveCourse}" />
         <h:commandButton value="Delete" action="#{courseBean.deleteCourse}" 
                          rendered="#{courseBean.course.id ne 0}" 

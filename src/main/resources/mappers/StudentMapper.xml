@@ -1,24 +1,39 @@
 <!-- StudentMapper.xml -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.StudentMapper">
+<mapper namespace="com.example.mapper.StudentMapper">
 
-  <resultMap id="StudentResultMap" type="com.example.Student">
+  <resultMap id="StudentResultMap" type="com.example.model.Student">
     <id property="id" column="id"/>
     <result property="firstName" column="firstname"/>
     <result property="lastName" column="lastname"/>
     
     <!-- ManyToOne: University -->
-    <association property="university" javaType="com.example.University"
+    <association property="university" javaType="com.example.model.University"
                  column="university_id"
                  select="selectUniversityById"/>
                  
     <!-- ManyToMany: Courses -->
-    <collection property="courses" ofType="com.example.Course"
+    <collection property="courses" ofType="com.example.model.Course"
                 column="id"
                 select="selectCoursesByStudentId"/>
   </resultMap>
+  
+    <select id="selectUniversityById" parameterType="int" resultType="com.example.model.University">
+    SELECT id, name FROM university WHERE id = #{id}
+  </select>
 
+  <select id="selectCoursesByStudentId" parameterType="int" resultType="com.example.model.Course">
+    SELECT c.id, c.title, c.university_id
+    FROM course c
+    JOIN course_student cs ON c.id = cs.course_id
+    WHERE cs.student_id = #{id}
+  </select>
+  
+  
+  
+  
+  
   <select id="selectById" parameterType="int" resultMap="StudentResultMap">
     SELECT id, firstname, lastname, university_id
     FROM student
@@ -30,16 +45,6 @@
     FROM student
   </select>
 
-  <select id="selectUniversityById" parameterType="int" resultType="com.example.University">
-    SELECT id, name FROM university WHERE id = #{id}
-  </select>
-
-  <select id="selectCoursesByStudentId" parameterType="int" resultType="com.example.Course">
-    SELECT c.id, c.title, c.university_id
-    FROM course c
-    JOIN course_student cs ON c.id = cs.course_id
-    WHERE cs.student_id = #{id}
-  </select>
 
   <select id="selectByUniversityId" parameterType="int" resultMap="StudentResultMap">
     SELECT id, firstname, lastname, university_id
@@ -47,12 +52,12 @@
     WHERE university_id = #{universityId}
   </select>
 
-  <insert id="insert" parameterType="com.example.Student">
+  <insert id="insert" parameterType="com.example.model.Student">
     INSERT INTO student (firstname, lastname, university_id)
     VALUES (#{firstName}, #{lastName}, #{university.id})
   </insert>
 
-  <update id="update" parameterType="com.example.Student">
+  <update id="update" parameterType="com.example.model.Student">
     UPDATE student
     SET firstname = #{firstName}, lastname = #{lastName}, university_id = #{university.id}
     WHERE id = #{id}

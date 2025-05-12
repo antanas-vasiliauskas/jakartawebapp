@@ -5,9 +5,9 @@
 
   <!-- 1. Type aliases must come before environments -->
   <typeAliases>
-    <typeAlias alias="University" type="com.example.University"/>
-    <typeAlias alias="Student" type="com.example.Student"/>
-    <typeAlias alias="Course" type="com.example.Course"/>
+    <typeAlias alias="University" type="com.example.model.University"/>
+    <typeAlias alias="Student" type="com.example.model.Student"/>
+    <typeAlias alias="Course" type="com.example.model.Course"/>
   </typeAliases>
 
   <!-- 2. Environment config -->

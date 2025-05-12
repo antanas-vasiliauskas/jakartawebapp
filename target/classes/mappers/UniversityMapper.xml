@@ -1,21 +1,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.UniversityMapper">
+<mapper namespace="com.example.mapper.UniversityMapper">
 
-  <resultMap id="UniversityResultMap" type="com.example.University">
+  <resultMap id="UniversityResultMap" type="com.example.model.University">
     <id property="id" column="id"/>
     <result property="name" column="name"/>
 
     <!-- OneToMany: Students -->
-    <collection property="students" ofType="com.example.Student"
+    <collection property="students" ofType="com.example.model.Student"
                 column="id"
                 select="selectStudentsByUniversityId"/>
 
     <!-- OneToMany: Courses -->
-    <collection property="courses" ofType="com.example.Course"
+    <collection property="courses" ofType="com.example.model.Course"
                 column="id"
                 select="selectCoursesByUniversityId"/>
   </resultMap>
+  
+  <select id="selectStudentsByUniversityId" parameterType="int" resultType="com.example.model.Student">
+    SELECT id, firstname, lastname, university_id
+    FROM student
+    WHERE university_id = #{id}
+  </select>
+
+  <select id="selectCoursesByUniversityId" parameterType="int" resultType="com.example.model.Course">
+    SELECT id, title, university_id
+    FROM course
+    WHERE university_id = #{id}
+  </select>
+  
+  
 
   <select id="selectById" parameterType="int" resultMap="UniversityResultMap">
     SELECT id, name FROM university WHERE id = #{id}
@@ -25,25 +39,11 @@
     SELECT id, name FROM university
   </select>
 
-  <!-- Nested select for students -->
-  <select id="selectStudentsByUniversityId" parameterType="int" resultType="com.example.Student">
-    SELECT id, firstname, lastname, university_id
-    FROM student
-    WHERE university_id = #{id}
-  </select>
-
-  <!-- Nested select for courses -->
-  <select id="selectCoursesByUniversityId" parameterType="int" resultType="com.example.Course">
-    SELECT id, title, university_id
-    FROM course
-    WHERE university_id = #{id}
-  </select>
-
-  <insert id="insert" parameterType="com.example.University">
+  <insert id="insert" parameterType="com.example.model.University">
     INSERT INTO university(name) VALUES(#{name})
   </insert>
 
-  <update id="update" parameterType="com.example.University">
+  <update id="update" parameterType="com.example.model.University">
     UPDATE university SET name = #{name} WHERE id = #{id}
   </update>
 

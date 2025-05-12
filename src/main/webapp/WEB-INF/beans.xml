@@ -6,15 +6,15 @@
        bean-discovery-mode="annotated" version="4.0">
   <alternatives>
   <!--  
-    <class>com.example.UniversityDaoJpa</class>
-    <class>com.example.StudentDaoJpa</class>
-    <class>com.example.CourseDaoJpa</class>
-      -->
+    <class>com.example.dao.UniversityDaoJpa</class>
+    <class>com.example.dao.StudentDaoJpa</class>
+    <class>com.example.dao.CourseDaoJpa</class>
+     -->
         
-    <class>com.example.UniversityDaoMyBatis</class>
-    <class>com.example.StudentDaoMyBatis</class>
-    <class>com.example.CourseDaoMyBatis</class>
-    
+    <class>com.example.dao.UniversityDaoMyBatis</class>
+    <class>com.example.dao.StudentDaoMyBatis</class>
+    <class>com.example.dao.CourseDaoMyBatis</class>
+     
    
   </alternatives>
 </beans>
